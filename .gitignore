@@ -31,3 +31,14 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Embedded H2 Database ###
+data/
+*.mv.db
+*.trace.db
+*.lock.db
+
+### Uploaded Evidence Files ###
+uploads/
+/uploads/iso_docs/
