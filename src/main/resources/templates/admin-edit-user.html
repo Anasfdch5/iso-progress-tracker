@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Edit User Account</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+
+            --brand-indigo: #6366f1;
+            --brand-cyan: #38bdf8;
+            --brand-emerald: #10b981;
+            --brand-amber: #f59e0b;
+            --brand-rose: #ef4444;
+
+            --shadow-card: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .edit-card {
+            width: 100%;
+            max-width: 560px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 36px 32px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 16px;
+        }
+
+        .header-icon {
+            width: 44px;
+            height: 44px;
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--brand-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Error Alert Banner */
+        .error-alert {
+            background-color: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--brand-rose);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: #0b0f19;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--brand-cyan);
+        }
+
+        .form-control[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #161e2e;
+        }
+
+        .lock-notice {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover { opacity: 0.9; }
+
+        .btn-primary { background-color: var(--brand-indigo); color: #ffffff; }
+        .btn-back {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+        }
+        .btn-back:hover { color: var(--text-primary); background-color: #374151; }
+    </style>
+</head>
+<body>
+
+<div class="edit-card">
+    <div class="header-title-group">
+        <div class="header-icon">✏️</div>
+        <div>
+            <h1>Edit User Profile</h1>
+            <div class="subtitle">Update user information and access permissions</div>
+        </div>
+    </div>
+
+    <!-- Error Banner for Taken Username / Validation Error -->
+    <div class="error-alert" th:if="${errorMessage}">
+        <span>⚠️</span>
+        <span th:text="${errorMessage}">An error occurred while updating user.</span>
+    </div>
+
+    <form th:action="@{/admin/users/update}" th:object="${user}" method="post" class="form-grid">
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Editable Username Field -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text"
+                   id="username"
+                   th:field="*{username}"
+                   class="form-control"
+                   pattern=".*\S.*"
+                   title="Username cannot be empty or blank spaces"
+                   required />
+        </div>
+
+        <!-- First & Last Name -->
+        <div class="form-row-2col">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" th:field="*{firstName}" required class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" th:field="*{lastName}" required class="form-control" />
+            </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" th:field="*{email}" required class="form-control" />
+        </div>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" />
+        </div>
+
+        <!-- 🔒 ROLE SELECTION FIELD WITH SELF-EDIT LOCKOUT PROTECTION -->
+        <div class="form-group">
+            <label for="role">User Role</label>
+
+            <!-- Case A: Editable ONLY when an admin is editing OTHER users -->
+            <select th:if="${user.username != #authentication.name and #authentication.name == 'admin'}"
+                    id="role"
+                    name="role"
+                    class="form-control">
+                <option th:each="r : ${roles}"
+                        th:value="${r}"
+                        th:text="${r}"
+                        th:selected="${r == user.role}">
+                </option>
+            </select>
+
+            <!-- Case B: Locked View when an admin is editing THEIR OWN profile OR non-root admin -->
+            <div th:unless="${user.username != #authentication.name and #authentication.name == 'admin'}">
+                <input type="text"
+                       class="form-control"
+                       th:value="${user.role}"
+                       disabled="disabled" />
+                <!-- Hidden input to preserve role value on submit -->
+                <input type="hidden" name="role" th:value="${user.role}" />
+
+                <span th:if="${user.username == #authentication.name}" class="lock-notice">
+                    🔒 Security Restriction: You cannot alter your own administrative role.
+                </span>
+                <span th:if="${user.username != #authentication.name and #authentication.name != 'admin'}" class="lock-notice">
+                    🔒 Restriction: Only the primary root administrator ('admin') can assign user roles.
+                </span>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="btn-group">
+            <a th:href="@{/admin/users}" class="btn btn-back">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

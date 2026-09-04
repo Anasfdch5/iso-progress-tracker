@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ISO Progress Tracker - Process Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+
+            --brand-indigo: #6366f1;
+            --brand-cyan: #38bdf8;
+            --brand-emerald: #10b981;
+            --brand-amber: #f59e0b;
+            --brand-rose: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            color-scheme: dark;
+        }
+
+        .card-container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 36px 32px;
+            box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--brand-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Error Banner */
+        .error-alert {
+            background-color: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--brand-rose);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Overview Key-Value Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 12px 16px;
+            background-color: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.6px;
+            align-self: center;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 12px;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--brand-indigo);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .progress-bar-container {
+            background-color: #1f2937;
+            border-radius: 6px;
+            height: 8px;
+            width: 120px;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        /* Tables Alignment */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        td {
+            border-bottom: 1px solid #1f2937;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: rgba(31, 41, 55, 0.5); }
+
+        .no-records {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 24px;
+        }
+
+        /* Inline Forms */
+        .form-inline-action {
+            display: grid;
+            grid-template-columns: 1.5fr 1.2fr 1fr 1.2fr auto;
+            gap: 10px;
+            align-items: center;
+            background-color: #0b0f19;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .form-inline-doc {
+            display: grid;
+            grid-template-columns: 1.5fr 1.2fr 1.5fr auto;
+            gap: 10px;
+            align-items: center;
+            background-color: #0b0f19;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .form-inline-action input,
+        .form-inline-action select,
+        .form-inline-doc input {
+            padding: 8px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: #111827;
+            height: 38px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .form-inline-action input:focus,
+        .form-inline-action select:focus,
+        .form-inline-doc input:focus {
+            outline: none;
+            border-color: var(--brand-cyan);
+        }
+
+        /* Custom File Upload */
+        .file-upload-wrapper {
+            display: flex;
+            align-items: center;
+            height: 38px;
+        }
+
+        .file-upload-input { display: none; }
+
+        .file-upload-label {
+            background-color: #1f2937;
+            border: 1px dashed var(--brand-cyan);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--brand-cyan);
+            text-align: center;
+            width: 100%;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .file-upload-label:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Live Preview Banner */
+        .file-info-preview {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 6px;
+            font-size: 12.5px;
+            color: var(--brand-emerald);
+        }
+
+        .file-info-grid {
+            display: flex;
+            gap: 20px;
+            font-weight: 500;
+        }
+
+        .file-info-item span {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Action Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover { opacity: 0.9; }
+
+        .btn-back {
+            background-color: var(--brand-indigo);
+            color: #ffffff;
+        }
+
+        .btn-add-action {
+            background-color: var(--brand-indigo);
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 0 16px;
+            font-size: 12.5px;
+            height: 38px;
+            cursor: pointer;
+            border: none;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .btn-download {
+            background-color: rgba(16, 185, 129, 0.12);
+            color: var(--brand-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-download:hover {
+            background-color: var(--brand-emerald);
+            color: #0b0f19;
+        }
+
+        .btn-delete {
+            background-color: rgba(239, 68, 68, 0.12);
+            color: var(--brand-rose);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-delete:hover {
+            background-color: var(--brand-rose);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+    <div class="header-title-group">
+        <div class="header-icon">📊</div>
+        <div>
+            <h1 th:text="${process.name}">ISO Process Name</h1>
+            <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Comprehensive process overview, action plans, and documentation register</div>
+        </div>
+    </div>
+
+    <!-- Error Alerts (Duplicate Document or Upload Failed) -->
+    <div class="error-alert" th:if="${errorMessage}">
+        <span>⚠️</span>
+        <span th:text="${errorMessage}">A document with this name already exists.</span>
+    </div>
+    <div class="error-alert" th:if="${param.error}">
+        <span>⚠️</span>
+        <span>File upload failed. Please try again with a valid file.</span>
+    </div>
+
+    <!-- Process Key-Value Overview -->
+    <div class="info-grid">
+        <div class="info-label">Database Record ID</div>
+        <div class="info-value" th:text="${process.id}">1</div>
+
+        <div class="info-label">ISO Standard</div>
+        <div class="info-value" th:text="${process.standard}">ISO 9001</div>
+
+        <div class="info-label">Responsible Person</div>
+        <div class="info-value" th:text="${process.responsiblePerson}">Responsible Person</div>
+
+        <div class="info-label">Target Completion Date</div>
+        <div class="info-value" th:text="${process.targetDate}">2026-12-31</div>
+
+        <div class="info-label">Current Status</div>
+        <div class="info-value">
+            <span class="status-badge" th:text="${process.status}">In Progress</span>
+        </div>
+
+        <div class="info-label">Metrics Progress</div>
+        <div class="info-value">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" th:style="${'width: ' + process.progress + '%; background-color: ' + (process.progress == 100 ? '#10b981' : '#6366f1') + ';'}"></div>
+            </div>
+            <span th:text="${process.progress + '%'}">0.0%</span>
+        </div>
+    </div>
+
+    <!-- 📋 ACTION PLANS TRACKING LIST SECTION -->
+    <h2>📋 Associated Action Plan</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Responsible Person</th>
+            <th>Deadline</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="action : ${actions}">
+            <td th:text="${action.description}" style="font-weight: 600;">Perform analysis</td>
+            <td th:text="${action.responsiblePerson}">Collaborator</td>
+            <td th:text="${action.deadline}" style="color: var(--text-secondary);">2026-08-15</td>
+            <td th:text="${action.comment}" style="color: var(--text-muted);">N/A</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(actions)}">
+            <td colspan="4" class="no-records">No actions recorded for this process yet.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ➕ QUICK ACTION GENERATOR FORM -->
+    <h2>➕ Add Tracking Action</h2>
+    <form th:action="@{/actions/save}" th:object="${newAction}" method="POST" class="form-inline-action">
+        <input type="hidden" th:field="*{process.id}" />
+
+        <!-- 1. Description -->
+        <input type="text" th:field="*{description}" placeholder="Action description..." required />
+
+        <!-- 2. Responsible Person Dropdown -->
+        <select th:field="*{responsiblePerson}" required>
+            <option value="" disabled selected>-- Responsible --</option>
+            <option th:each="user : ${users}"
+                    th:value="${user.username}"
+                    th:text="${user.username}">Username</option>
+        </select>
+
+        <!-- 3. Deadline Input -->
+        <input type="date"
+               id="actionDeadline"
+               th:field="*{deadline}"
+               th:min="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+               required
+               onchange="validateActionDeadline(this)" />
+
+        <!-- 4. Comment -->
+        <input type="text" th:field="*{comment}" placeholder="Comments..." />
+
+        <!-- 5. Submit Button -->
+        <button type="submit" class="btn-add-action">+ Add Action</button>
+    </form>
+
+    <!-- 📁 DOCUMENT REGISTER SECTION -->
+    <h2>📁 Document Register (ISO Documents)</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Status</th>
+            <th>Upload Date</th>
+            <th style="text-align: right;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="doc : ${documents}">
+            <td th:text="${doc.title}" style="font-weight: 600;">Quality Manual</td>
+            <td th:text="${doc.fileType}">Procedure</td>
+            <td th:text="${doc.formattedFileSize}" style="color: var(--text-secondary);">1.2 MB</td>
+            <td><span class="status-badge" th:text="${doc.status}">Draft</span></td>
+            <td th:text="${doc.uploadDate}" style="color: var(--text-muted);">2026-08-15</td>
+            <td style="text-align: right; white-space: nowrap;">
+                <a th:href="@{/documents/download/{id}(id=${doc.id})}"
+                   class="btn-download">📥 Download</a>
+                <a th:href="@{/processes/documents/delete/{id}(id=${doc.id}, processId=${process.id})}"
+                   class="btn-delete"
+                   onclick="return confirm('Delete this document?');">Delete</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(documents)}">
+            <td colspan="6" class="no-records">No documents recorded for this process yet.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 📤 ADD & UPLOAD DOCUMENT SECTION -->
+    <form th:action="@{/processes/documents/save}" th:object="${newDocument}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{process.id}" />
+
+        <div class="form-inline-doc">
+            <input type="text" th:field="*{title}" placeholder="Document title..." required />
+            <input type="text" th:field="*{fileType}" placeholder="Type (e.g. Procedure)..." required />
+
+            <!-- Custom File Picker -->
+            <div class="file-upload-wrapper">
+                <label for="documentFile" class="file-upload-label" id="fileUploadLabel">📎 Choose File...</label>
+                <input type="file" id="documentFile" name="file" class="file-upload-input" required />
+            </div>
+
+            <button type="submit" class="btn-add-action">+ Upload & Save</button>
+        </div>
+
+        <!-- Live Metadata Preview -->
+        <div id="fileInfoPreview" class="file-info-preview">
+            <div class="file-info-grid">
+                <div class="file-info-item">📄 File: <span id="displayFileName">-</span></div>
+                <div class="file-info-item">📦 Size: <span id="displayFileSize">-</span></div>
+            </div>
+        </div>
+    </form>
+
+    <!-- BACK TO DASHBOARD -->
+    <div class="btn-group">
+        <a th:href="@{/processes}" class="btn btn-back">Back to Dashboard</a>
+    </div>
+</div>
+
+<!-- JavaScript Date & Upload Validation -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deadlineInput = document.getElementById('actionDeadline');
+        const todayStr = getTodayLocalString();
+        if (deadlineInput && !deadlineInput.getAttribute('min')) {
+            deadlineInput.setAttribute('min', todayStr);
+        }
+    });
+
+    function getTodayLocalString() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // File upload live metadata listener
+    const docFileElem = document.getElementById('documentFile');
+    if (docFileElem) {
+        docFileElem.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                let formattedSize = "";
+                if (file.size < 1024 * 1024) {
+                    formattedSize = (file.size / 1024).toFixed(1) + " KB";
+                } else {
+                    formattedSize = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+                }
+
+                document.getElementById('fileUploadLabel').innerText = "✓ " + file.name;
+                document.getElementById('displayFileName').innerText = file.name;
+                document.getElementById('displayFileSize').innerText = formattedSize;
+
+                document.getElementById('fileInfoPreview').style.display = 'block';
+            }
+        });
+    }
+
+    // Date validation for action deadline
+    function validateActionDeadline(inputElement) {
+        if (!inputElement.value) return;
+
+        const todayStr = getTodayLocalString();
+
+        if (inputElement.value < todayStr) {
+            alert("⚠️ Invalid Deadline! Action deadline cannot be in the past. Please select today or a future date.");
+            inputElement.value = '';
+        }
+    }
+</script>
+
+</body>
+</html>

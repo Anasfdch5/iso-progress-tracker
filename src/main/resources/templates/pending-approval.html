@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Pending</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --text-primary: #f9fafb;
+            --text-muted: #6b7280;
+            --brand-amber: #f59e0b;
+            --brand-cyan: #38bdf8;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .card {
+            max-width: 480px; width: 100%;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 40px 32px;
+            text-align: center;
+        }
+        .icon {
+            width: 64px; height: 64px;
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--brand-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; margin: 0 auto 20px auto;
+        }
+        h1 { margin: 0 0 12px 0; font-size: 22px; font-weight: 800; }
+        p { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 28px; }
+        .btn-back {
+            display: inline-block; padding: 11px 24px;
+            background-color: #1f2937; color: var(--brand-cyan);
+            border: 1px solid var(--card-border);
+            border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 13.5px;
+        }
+        .btn-back:hover { background-color: #374151; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="icon">⏳</div>
+    <h1>Registration Submitted!</h1>
+    <p>Your registration request has been successfully received. Please wait until an administrator reviews and approves your account before logging in.</p>
+    <a th:href="@{/login}" class="btn-back">Return to Login</a>
+</div>
+
+</body>
+</html>

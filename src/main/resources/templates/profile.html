@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - ISO Progress Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --brand-indigo: #6366f1;
+            --brand-cyan: #38bdf8;
+            --brand-emerald: #10b981;
+            --brand-rose: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            color-scheme: dark;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+        }
+
+        h1 { margin: 0; font-size: 20px; font-weight: 800; }
+
+        .btn-back {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-back:hover { color: var(--text-primary); }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .alert-success { background-color: rgba(16, 185, 129, 0.15); color: var(--brand-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .alert-danger { background-color: rgba(239, 68, 68, 0.15); color: var(--brand-rose); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        h2 { font-size: 16px; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+
+        .form-grid { display: flex; flex-direction: column; gap: 16px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+        label { font-size: 11.5px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: #0b0f19;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus { outline: none; border-color: var(--brand-cyan); }
+        .form-control[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            align-self: flex-start;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover { opacity: 0.9; }
+
+        .btn-primary { background-color: var(--brand-indigo); color: #ffffff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Global Success Alert -->
+    <div th:if="${success}" class="alert alert-success">
+        <span>✓</span> <span th:text="${success}">Profile updated!</span>
+    </div>
+
+    <div class="header">
+        <h1>👤 My Account Settings</h1>
+        <a th:href="@{/processes}" class="btn-back">← Back to Dashboard</a>
+    </div>
+
+    <!-- 1. PERSONAL INFORMATION FORM -->
+    <div class="card">
+        <h2>Personal Information</h2>
+        <form th:action="@{/profile/update-details}" th:object="${user}" method="post" class="form-grid">
+
+            <!-- Hidden input for ID ONLY -->
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text"
+                       id="username"
+                       th:field="*{username}"
+                       class="form-control"
+                       pattern=".*\S.*"
+                       title="Username cannot be empty or blank spaces"
+                       required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" th:field="*{email}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" th:field="*{phoneNumber}" class="form-control" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Personal Details</button>
+        </form>
+    </div>
+
+    <!-- 2. CHANGE PASSWORD FORM -->
+    <div class="card">
+        <h2>Security & Password</h2>
+
+        <!-- Password Error Alert Banner (Triggers if current password is wrong or mismatch occurs) -->
+        <div th:if="${passwordError}" class="alert alert-danger">
+            <span>⚠️</span> <span th:text="${passwordError}">Error changing password!</span>
+        </div>
+
+        <form th:action="@{/profile/update-password}" th:object="${passwordForm}" method="post" class="form-grid" onsubmit="return validatePasswordMatch()">
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password"
+                       th:field="*{currentPassword}"
+                       class="form-control"
+                       placeholder="Enter current password"
+                       required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password"
+                           id="newPassword"
+                           th:field="*{newPassword}"
+                           class="form-control"
+                           placeholder="Enter new password (min. 6 characters)"
+                           required />
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password"
+                           id="confirmPassword"
+                           th:field="*{confirmPassword}"
+                           class="form-control"
+                           placeholder="Confirm new password"
+                           required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    function validatePasswordMatch() {
+        const pass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+        if (pass !== confirmPass) {
+            alert("⚠️ New password and confirmation password do not match!");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+</html>

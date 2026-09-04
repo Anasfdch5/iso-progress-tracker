@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ISO Progress Tracker - Visual Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+
+            --brand-indigo: #6366f1;
+            --brand-cyan: #38bdf8;
+            --brand-emerald: #10b981;
+            --brand-amber: #f59e0b;
+            --brand-rose: #ef4444;
+            --brand-purple: #8b5cf6;
+
+            --shadow-card: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            color-scheme: dark;
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        /* Top Executive Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 24px 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
+            margin-bottom: 28px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--brand-indigo);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        .btn-back {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            color: var(--text-primary);
+            background-color: #374151;
+        }
+
+        /* Executive KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        .kpi-card-blue::before { background: linear-gradient(90deg, var(--brand-indigo), var(--brand-cyan)); }
+        .kpi-card-amber::before { background: linear-gradient(90deg, var(--brand-amber), #fbbf24); }
+        .kpi-card-emerald::before { background: linear-gradient(90deg, var(--brand-emerald), #34d399); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kpi-title {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .kpi-badge-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .kpi-card-blue .kpi-badge-icon { background: rgba(99, 102, 241, 0.15); color: var(--brand-indigo); }
+        .kpi-card-amber .kpi-badge-icon { background: rgba(245, 158, 11, 0.15); color: var(--brand-amber); }
+        .kpi-card-emerald .kpi-badge-icon { background: rgba(16, 185, 129, 0.15); color: var(--brand-emerald); }
+
+        .kpi-value {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: 10px;
+            letter-spacing: -1px;
+        }
+
+        /* Visual Charts Layout */
+        .charts-grid-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .charts-grid-bottom {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .chart-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 270px;
+            width: 100%;
+        }
+
+        /* Tables & Lists Grid Layout */
+        .grid-two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .table-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 8px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        td {
+            border-bottom: 1px solid #1f2937;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(31, 41, 55, 0.5);
+        }
+
+        /* Badges & Status Elements */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .badge-completed { background-color: rgba(16, 185, 129, 0.15); color: var(--brand-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-unstarted { background-color: rgba(239, 68, 68, 0.15); color: var(--brand-rose); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-rank { background-color: rgba(99, 102, 241, 0.15); color: var(--brand-indigo); font-weight: 800; border-radius: 6px; }
+
+        /* Modern Gradient Progress Bars */
+        .mini-progress-bg {
+            background-color: #1f2937;
+            border-radius: 6px;
+            height: 8px;
+            width: 80px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+            overflow: hidden;
+        }
+
+        .mini-progress-fill {
+            background-color: var(--brand-emerald);
+            height: 100%;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 1024px) {
+            .kpi-grid, .charts-grid-top, .charts-grid-bottom, .grid-two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Top Executive Header -->
+    <div class="header">
+        <div class="header-title-group">
+            <div class="header-icon">📈</div>
+            <div>
+                <h1>ISO Executive Analytics Dashboard</h1>
+                <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Real-time Quality & Security Management System Status</div>
+            </div>
+        </div>
+        <a th:href="@{/processes}" class="btn-back">← Back to Process Table</a>
+    </div>
+
+    <!-- 1. Executive Metric Summary Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card kpi-card-blue">
+            <div class="kpi-header">
+                <div class="kpi-title">Total Monitored Processes</div>
+                <div class="kpi-badge-icon">⚙️</div>
+            </div>
+            <div class="kpi-value" th:text="${totalProcesses}">0</div>
+        </div>
+        <div class="kpi-card kpi-card-amber">
+            <div class="kpi-header">
+                <div class="kpi-title">Open Action Items</div>
+                <div class="kpi-badge-icon">⚡</div>
+            </div>
+            <div class="kpi-value" style="color: var(--brand-amber);" th:text="${pendingActions}">0</div>
+        </div>
+        <div class="kpi-card kpi-card-emerald">
+            <div class="kpi-header">
+                <div class="kpi-title">Total Registered Documents</div>
+                <div class="kpi-badge-icon">📂</div>
+            </div>
+            <div class="kpi-value" style="color: var(--brand-emerald);" th:text="${totalDocuments}">0</div>
+        </div>
+    </div>
+
+    <!-- 2. Primary Visual Analytics (Bar + Doughnut) -->
+    <div class="charts-grid-top">
+        <div class="chart-card">
+            <h2>📊 Compliance Score by ISO Standard</h2>
+            <div class="chart-container">
+                <canvas id="complianceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>🍩 Process Status Health</h2>
+            <div class="chart-container">
+                <canvas id="statusDoughnutChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Secondary Visual Analytics (Pie + Workload Bar) -->
+    <div class="charts-grid-bottom">
+        <div class="chart-card">
+            <h2>🥧 Standard Distribution</h2>
+            <div class="chart-container">
+                <canvas id="standardsPieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2>👥 Assigned Processes per Responsible Person</h2>
+            <div class="chart-container">
+                <canvas id="workloadChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Rankings Section -->
+    <div class="grid-two-columns">
+        <div class="table-card">
+            <h2>👑 Responsible Persons Leaderboard</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Responsible Person</th>
+                    <th>Assigned Processes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry, stat : ${responsibleRankings}">
+                    <td style="width: 50px;"><span class="badge badge-rank" th:text="'#' + ${stat.count}">#1</span></td>
+                    <td th:text="${entry.key}" style="font-weight: 600; color: var(--text-primary);">Person Name</td>
+                    <td th:text="${entry.value} + ' process(es)'" style="color: var(--text-secondary);">0</td>
+                </tr>
+                <tr th:if="${#maps.isEmpty(responsibleRankings)}">
+                    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No data available</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-card">
+            <h2>📈 Process Progress Ranking</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Process Name</th>
+                    <th>Standard</th>
+                    <th>Progress</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="proc : ${rankedProcesses}">
+                    <td th:text="${proc.name}" style="font-weight: 600; color: var(--text-primary);">Process Name</td>
+                    <td th:text="${proc.standard}" style="color: var(--text-secondary);">ISO Standard</td>
+                    <td>
+                        <div class="mini-progress-bg">
+                            <div class="mini-progress-fill" th:style="${'width: ' + proc.progressPercentage + '%; background-color: ' + (proc.progressPercentage == 100 ? '#10b981' : '#6366f1') + ';'}"></div>
+                        </div>
+                        <span th:text="${proc.progressPercentage + '%'}" style="font-weight: 700; font-size: 12px;">0%</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(rankedProcesses)}">
+                    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No processes recorded</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 5. Filtered Status Lists -->
+    <div class="grid-two-columns">
+        <div class="table-card">
+            <h2>✅ Completed Processes (100%)</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Process Name</th>
+                    <th>Responsible</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="proc : ${completedProcesses}">
+                    <td th:text="${proc.name}" style="font-weight: 600;">Process Name</td>
+                    <td th:text="${proc.responsiblePerson}" style="color: var(--text-secondary);">Person</td>
+                    <td><span class="badge badge-completed">100% Done</span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(completedProcesses)}">
+                    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No completed processes yet</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-card">
+            <h2>⚠️ Unstarted Processes (0%)</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Process Name</th>
+                    <th>Responsible</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="proc : ${unstartedProcesses}">
+                    <td th:text="${proc.name}" style="font-weight: 600;">Process Name</td>
+                    <td th:text="${proc.responsiblePerson}" style="color: var(--text-secondary);">Person</td>
+                    <td><span class="badge badge-unstarted">0% Started</span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(unstartedProcesses)}">
+                    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No unstarted processes</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ⚡ STYLED CHART.JS INITIALIZATION -->
+<script th:inline="javascript">
+    const iso9001Score = /*[[${iso9001Avg}]]*/ 0;
+    const iso27001Score = /*[[${iso27001Avg}]]*/ 0;
+
+    const countCompleted = /*[[${countCompleted}]]*/ 0;
+    const countInProgress = /*[[${countInProgress}]]*/ 0;
+    const countUnstarted = /*[[${countUnstarted}]]*/ 0;
+
+    const countIso9001 = /*[[${countIso9001}]]*/ 0;
+    const countIso27001 = /*[[${countIso27001}]]*/ 0;
+
+    const responsibleMap = /*[[${responsibleRankings}]]*/ {};
+    const responsibleLabels = Object.keys(responsibleMap);
+    const responsibleData = Object.values(responsibleMap);
+
+    // Global Font & Tooltip Styling
+    Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+    Chart.defaults.color = '#9ca3af';
+
+    const commonPlugins = {
+        legend: {
+            position: 'bottom',
+            labels: {
+                font: { size: 12, weight: '600' },
+                padding: 16,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                boxWidth: 8,
+                color: '#9ca3af'
+            }
+        },
+        tooltip: {
+            backgroundColor: '#1f2937',
+            titleColor: '#f9fafb',
+            bodyColor: '#e5e7eb',
+            borderColor: '#374151',
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: true,
+            boxPadding: 4,
+            usePointStyle: true
+        }
+    };
+
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: commonPlugins
+    };
+
+    // Helper: Create Gradient Fills
+    function createGradient(ctx, colorTop, colorBottom) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+        gradient.addColorStop(0, colorTop);
+        gradient.addColorStop(1, colorBottom);
+        return gradient;
+    }
+
+    // CHART 1: Compliance Bar Chart (Gradients)
+    const ctx1 = document.getElementById('complianceChart').getContext('2d');
+    const gradIndigo = createGradient(ctx1, '#818cf8', '#4f46e5');
+    const gradEmerald = createGradient(ctx1, '#34d399', '#059669');
+
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['ISO 9001 (Quality)', 'ISO 27001 (Security)'],
+            datasets: [{
+                label: 'Avg Progress (%)',
+                data: [iso9001Score, iso27001Score],
+                backgroundColor: [gradIndigo, gradEmerald],
+                borderRadius: 10,
+                borderSkipped: false,
+                barThickness: 42
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { callback: v => v + '%', font: { weight: '600' } },
+                    grid: { color: '#1f2937' }
+                },
+                x: { grid: { display: false }, ticks: { font: { weight: '600' } } }
+            },
+            plugins: { ...commonPlugins, legend: { display: false } }
+        }
+    });
+
+    // CHART 2: Status Doughnut Chart (Neon Cutout & Glow)
+    new Chart(document.getElementById('statusDoughnutChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed (100%)', 'In Progress', 'Unstarted (0%)'],
+            datasets: [{
+                data: [countCompleted, countInProgress, countUnstarted],
+                backgroundColor: ['#10b981', '#6366f1', '#ef4444'],
+                hoverBackgroundColor: ['#34d399', '#818cf8', '#f87171'],
+                borderWidth: 3,
+                borderColor: '#111827',
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            ...commonOptions,
+            cutout: '72%',
+            animation: { animateScale: true, animateRotate: true }
+        }
+    });
+
+    // CHART 3: Standards Pie Chart (Fixed Hex Palette)
+    new Chart(document.getElementById('standardsPieChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: ['ISO 9001', 'ISO 27001'],
+            datasets: [{
+                data: [countIso9001, countIso27001],
+                backgroundColor: ['#6366f1', '#ef4444'],
+                hoverBackgroundColor: ['#818cf8', '#f87171'],
+                borderWidth: 3,
+                borderColor: '#111827',
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            ...commonOptions,
+            animation: { animateScale: true, animateRotate: true }
+        }
+    });
+
+    // CHART 4: Workload Bar Chart (Horizontal Cyan-to-Purple Gradient)
+    const ctx4 = document.getElementById('workloadChart').getContext('2d');
+    const gradWorkload = ctx4.createLinearGradient(0, 0, 400, 0);
+    gradWorkload.addColorStop(0, '#38bdf8');
+    gradWorkload.addColorStop(0.5, '#6366f1');
+    gradWorkload.addColorStop(1, '#a855f7');
+
+    new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: responsibleLabels,
+            datasets: [{
+                label: 'Assigned Processes',
+                data: responsibleData,
+                backgroundColor: gradWorkload,
+                hoverBackgroundColor: '#818cf8',
+                borderRadius: 8,
+                borderSkipped: false,
+                barThickness: 22
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, font: { weight: '600' } },
+                    grid: { color: '#1f2937' }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { font: { weight: '600' }, color: '#f9fafb' }
+                }
+            },
+            plugins: {
+                ...commonPlugins,
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

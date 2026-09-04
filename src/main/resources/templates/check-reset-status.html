@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Password Reset Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f9fafb; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 36px 32px; width: 100%; max-width: 440px; }
+        h1 { font-size: 20px; font-weight: 800; margin: 0 0 16px 0; text-align: center; }
+        .alert { padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center; }
+        .alert-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert-warning { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .alert-success { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: 700; margin-bottom: 6px; color: #9ca3af; font-size: 12px; text-transform: uppercase; }
+        input[type="text"], input[type="email"] { width: 100%; padding: 11px; border: 1px solid #1f2937; border-radius: 8px; background: #0b0f19; color: #fff; font-size: 13.5px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 700; background-color: #6366f1; color: white; cursor: pointer; }
+        .auth-link { display: block; text-align: center; margin-top: 16px; color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🔑 Check Reset Status</h1>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div th:if="${pending}" class="alert alert-warning">
+        ⏳ Admin has not reset your password yet. Please check back shortly.
+    </div>
+
+    <div th:if="${fulfilled}" class="alert alert-success">
+        ✓ Your password has been updated by the Admin! Check your email for the new password :)
+
+    </div>
+
+    <form th:if="${fulfilled == null or !fulfilled}" th:action="@{/check-reset-status}" method="post">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus />
+        </div>
+        <div class="form-group">
+            <label for="email">Gmail Address</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+        <button type="submit" class="btn-submit">Verify Credentials</button>
+    </form>
+
+    <a th:href="@{/login}" class="auth-link">← Back to Login</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>ISO Progress Tracker - Document Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+
+            --brand-indigo: #6366f1;
+            --brand-cyan: #38bdf8;
+            --brand-emerald: #10b981;
+            --brand-rose: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Simplified Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .header-title-group { display: flex; align-items: center; gap: 14px; }
+
+        .header-icon {
+            width: 42px;
+            height: 42px;
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--brand-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .kpi-badge {
+            background-color: #0b0f19;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kpi-badge strong { color: var(--brand-cyan); font-weight: 700; }
+
+        .btn-back {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-back:hover {
+            color: var(--text-primary);
+            background-color: #374151;
+        }
+
+        /* Simplified Main Data Card */
+        .table-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: var(--text-secondary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        td { border-bottom: 1px solid #1f2937; color: var(--text-primary); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #1f2937; }
+
+        .no-records { text-align: center; color: var(--text-muted); font-style: italic; padding: 32px; }
+
+        /* Clean Badges & Links */
+        .iso-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .iso-9001 { background-color: rgba(99, 102, 241, 0.15); color: var(--brand-indigo); border: 1px solid rgba(99, 102, 241, 0.3); }
+        .iso-27001 { background-color: rgba(16, 185, 129, 0.15); color: var(--brand-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .sort-header {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sort-header:hover { color: var(--brand-cyan); }
+        .sort-arrows { font-size: 10px; opacity: 0.4; }
+        .sort-arrows.active { opacity: 1; color: var(--brand-cyan); }
+
+        /* Simple Select Dropdowns in Headers */
+        .column-filter-select {
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            font-size: 11.5px;
+            font-family: inherit;
+            background-color: #0b0f19;
+            color: var(--brand-cyan);
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        /* Action Buttons */
+        .btn-download {
+            background-color: rgba(16, 185, 129, 0.12);
+            color: var(--brand-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-download:hover { background-color: var(--brand-emerald); color: #0b0f19; }
+
+        .btn-delete {
+            background-color: rgba(239, 68, 68, 0.12);
+            color: var(--brand-rose);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-delete:hover { background-color: var(--brand-rose); color: #ffffff; }
+
+        .process-link {
+            color: var(--brand-cyan);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .process-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header Block -->
+    <div class="header">
+        <div class="header-title-group">
+            <div class="header-icon">📂</div>
+            <div>
+                <h1>ISO Document Register</h1>
+                <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Centralized repository for Quality & Security compliance documents</div>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="kpi-badge">
+                Total Documents: <strong th:text="${#lists.size(documents)}">0</strong>
+            </div>
+            <a th:href="@{/processes}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Document Register Table -->
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <!-- Title -->
+                <th>
+                    <a th:href="@{/documents(sortField='title', sortDir=${sortField == 'title' ? reverseSortDir : 'asc'}, standard=${standard}, processId=${processId})}" class="sort-header">
+                        Document Title
+                        <span class="sort-arrows" th:classappend="${sortField == 'title'} ? 'active' : ''">▲▼</span>
+                    </a>
+                </th>
+
+                <!-- Parent Process Dropdown -->
+                <th>
+                    <span>Parent Process</span><br>
+                    <select class="column-filter-select" onchange="filterByProcess(this.value)">
+                        <option value="" th:selected="${processId == null}">All Processes</option>
+                        <option th:each="proc : ${allProcesses}"
+                                th:value="${proc.id}"
+                                th:selected="${processId == proc.id}"
+                                th:text="${proc.name}">Process Name</option>
+                    </select>
+                </th>
+
+                <!-- ISO Standard Dropdown -->
+                <th>
+                    <span>Standard</span><br>
+                    <select class="column-filter-select" onchange="filterByStandard(this.value)">
+                        <option value="" th:selected="${#strings.isEmpty(standard)}">All Standards</option>
+                        <option value="ISO 9001" th:selected="${standard == 'ISO 9001'}">ISO 9001</option>
+                        <option value="ISO 27001" th:selected="${standard == 'ISO 27001'}">ISO 27001</option>
+                    </select>
+                </th>
+
+                <th>Type</th>
+
+                <!-- Size -->
+                <th>
+                    <a th:href="@{/documents(sortField='size', sortDir=${sortField == 'size' ? reverseSortDir : 'asc'}, standard=${standard}, processId=${processId})}" class="sort-header">
+                        Size
+                        <span class="sort-arrows" th:classappend="${sortField == 'size'} ? 'active' : ''">▲▼</span>
+                    </a>
+                </th>
+
+                <!-- Upload Date -->
+                <th>
+                    <a th:href="@{/documents(sortField='uploadDate', sortDir=${sortField == 'uploadDate' ? reverseSortDir : 'asc'}, standard=${standard}, processId=${processId})}" class="sort-header">
+                        Upload Date
+                        <span class="sort-arrows" th:classappend="${sortField == 'uploadDate'} ? 'active' : ''">▲▼</span>
+                    </a>
+                </th>
+
+                <th style="text-align: right;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="doc : ${documents}">
+                <td style="font-weight: 600; color: var(--text-primary);" th:text="${doc.title}">Quality Manual</td>
+
+                <td>
+                    <a th:if="${doc.process != null}"
+                       th:href="@{/processes/{id}(id=${doc.process.id})}"
+                       class="process-link"
+                       th:text="${doc.process.name}">Risk Assessment</a>
+                    <span th:if="${doc.process == null}" style="color: var(--text-muted); font-style: italic;">Unassigned</span>
+                </td>
+
+                <td>
+                    <span th:if="${doc.process != null}"
+                          class="iso-badge"
+                          th:classappend="${doc.process.standard == 'ISO 9001' ? 'iso-9001' : 'iso-27001'}"
+                          th:text="${doc.process.standard}">ISO 27001</span>
+                    <span th:if="${doc.process == null}" style="color: var(--text-muted);">-</span>
+                </td>
+
+                <td th:text="${doc.fileType}" style="color: var(--text-secondary);">Procedure</td>
+                <td th:text="${doc.formattedFileSize}" style="color: var(--text-secondary);">1.2 MB</td>
+                <td th:text="${doc.uploadDate}" style="color: var(--text-muted);">2026-08-15</td>
+                <td style="text-align: right; white-space: nowrap;">
+                    <a th:href="@{/documents/download/{id}(id=${doc.id})}"
+                       target="_blank"
+                       class="btn-download">📥 Download</a>
+                    <a th:href="@{/documents/delete/{id}(id=${doc.id})}"
+                       class="btn-delete"
+                       onclick="return confirm('Delete this document?');">Delete</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(documents)}">
+                <td colspan="7" class="no-records">No ISO documents found in the system.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function filterByStandard(val) {
+        const urlParams = new URLSearchParams(window.location.search);
+        val ? urlParams.set('standard', val) : urlParams.delete('standard');
+        window.location.href = '/documents?' + urlParams.toString();
+    }
+
+    function filterByProcess(pId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        pId ? urlParams.set('processId', pId) : urlParams.delete('processId');
+        window.location.href = '/documents?' + urlParams.toString();
+    }
+</script>
+
+</body>
+</html>
