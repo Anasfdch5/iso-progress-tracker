@@ -223,7 +223,7 @@ spring.servlet.multipart.max-request-size=10MB
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/Anasfdch5/iso-progress-tracker.git](https://github.com/Anasfdch5/iso-progress-tracker.git)
+git clone https://github.com/Anasfdch5/iso-progress-tracker.git
 cd iso-progress-tracker
 
 ```
@@ -275,7 +275,7 @@ This project is licensed under the **GNU General Public License v3.0** — see t
 ## 👤 Author
 
 * **Anas Fdaouch** — Software Engineering Student at École Nationale des Sciences Appliquées d'Agadir (ENSA-A)
-* **Email:** anasfdaouch5@gmail.com
+* **Email:** — anasfdaouch5@gmail.com
 * **GitHub:** [github.com/Anasfdch5](https://github.com/Anasfdch5)
 * **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.linkedin.com/in/anas-fdaouch/)
 
