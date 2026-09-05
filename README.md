@@ -1,35 +1,37 @@
 # 🛡️ ISO Progress Tracker
 
-[![Java](https://img.shields.io/badge/Java-17_LTS-ED8B00?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.5-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Spring Security](https://img.shields.io/badge/Spring_Security-6-6DB33F?logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
-[![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3-005F0F?logo=thymeleaf&logoColor=white)](https://www.thymeleaf.org/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
-[![Database](https://img.shields.io/badge/H2-Persistent_Mode-003B57?logo=sqlite&logoColor=white)](https://www.h2database.com/)
-
-A centralized web application designed to streamline, automate, and audit compliance monitoring for international standards:
-- **ISO 9001:2015** (Quality Management Systems)
-- **ISO/IEC 27001:2022** (Information Security Management Systems)
-
-Built with a 3-tier monolithic MVC architecture following the **2TUP (Two Tracks Unified Process)** methodology.
+A centralized web application designed to track and audit compliance workflows for **ISO 9001:2015** (Quality Management) and **ISO/IEC 27001:2022** (Information Security Management).
 
 ---
 
-## ✨ Key Features
+## 📌 Features
 
-- **Process Portfolio & Mapping:** Complete lifecycle management (CRUD) for ISO 9001 and ISO 27001 processes with dynamic progress calculation, search, and multi-criteria sorting.
-- **Corrective Action Plans:** Dedicated task tracking linked directly to parent processes with operational states (`EN COURS`, `TERMINÉ`) and deadlines.
-- **Audit Evidence Register:** Centralized file repository supporting uploads, metadata indexing, duplicate detection, and secure downloads.
-- **In-Memory Analytics Dashboard:** Real-time compliance scoring, progress ranking, and workload distribution per stakeholder computed dynamically via the **Java Streams API**.
-- **Role-Based Access Control (RBAC):** Tiered permissions (`ROLE_ADMIN` vs `ROLE_USER`) powered by **Spring Security 6**.
-- **Security Interceptor:** Custom `ForcePasswordChangeInterceptor` requiring users with temporary passwords to reset credentials before accessing system modules.
-- **User Governance:** Administrative directory to approve/reject pending registrations and manually process account recovery tickets.
+- **Process Portfolio:** Full lifecycle management (CRUD) for ISO processes with real-time progress calculation, search, and multi-criteria sorting[cite: 1].
+- **Action Plans:** Task tracking linked to processes with strict operational states (`EN COURS`, `TERMINÉ`) and deadlines[cite: 1].
+- **Audit Evidence Vault:** Centralized document register supporting file uploads, metadata indexing, and secure downloads[cite: 1].
+- **Analytics Dashboard:** Dynamic compliance scores, pilot rankings, and progress metrics calculated using the **Java Streams API**[cite: 1].
+- **Security & Access Control:** Role-based permissions (`ROLE_ADMIN` vs. `ROLE_USER`) powered by **Spring Security 6**, including admin approval for new accounts and forced renewal of temporary passwords[cite: 1].
 
 ---
 
-## 🏛️ System Architecture
+## 🛠️ Tech Stack
 
-```text
-├── Presentation Layer: Thymeleaf 3, Bootstrap 5, HTML5/CSS3, JavaScript
-├── Business & Security Layer: Spring MVC, Spring Security 6, Custom Interceptors, Java Streams API
-└── Persistence & Data Layer: Spring Data JPA, Hibernate ORM, Embedded H2 Database (File Mode)
+- **Backend:** Java 17 LTS, Spring Boot 3, Spring Security 6, Spring Data JPA / Hibernate[cite: 1]
+- **Frontend:** Thymeleaf 3, Bootstrap 5, HTML5/CSS3, JavaScript[cite: 1]
+- **Database:** H2 Database Engine (Persistent File Mode)[cite: 1]
+- **Methodology:** 2TUP, UML (PlantUML)[cite: 1]
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- JDK 17+[cite: 1]
+- Apache Maven 3.8+[cite: 1]
+
+### Installation & Run
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/Anasfdch5/iso-progress-tracker.git](https://github.com/Anasfdch5/iso-progress-tracker.git)
+   cd iso-progress-tracker
