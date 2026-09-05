@@ -88,7 +88,6 @@ The application adopts an enterprise 3-tier monolithic architecture ensuring str
 │  - Embedded H2 Database (Persistent File Mode + AUTO_SERVER=TRUE)      │
 │  - File System Evidence Vault (uploads/iso_docs/)                      │
 └────────────────────────────────────────────────────────────────────────┘
-
 ```
 
 ---
@@ -96,7 +95,7 @@ The application adopts an enterprise 3-tier monolithic architecture ensuring str
 ## 🛠️ Technology Stack
 
 | Layer / Concern | Technology | Version | Architectural Rationale |
-| --- | --- | --- | --- |
+| :--- | :--- | :--- | :--- |
 | **Runtime Environment** | **Java SE (JDK)** | 17 LTS | Modern LTS enterprise standard featuring Records, Text Blocks, and enhanced Streams API. |
 | **Framework Engine** | **Spring Boot** | 3.2.5 | Rapid configuration, IoC container, embedded Tomcat 10, and modern Spring 6 ecosystem. |
 | **Security Framework** | **Spring Security** | 6.2.4 | Route protection, cryptographic BCrypt password hashing, session management, and RBAC. |
@@ -177,7 +176,6 @@ iso-progress-tracker/
 ├── LICENSE                                         # GNU General Public License v3.0
 ├── pom.xml                                         # Maven project definition and dependency manifest
 └── README.md                                       # Comprehensive project documentation
-
 ```
 
 ---
@@ -205,7 +203,6 @@ spring.h2.console.path=/h2-console
 # Multipart File Upload Limits (Audit Evidence Vault)
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
-
 ```
 
 ---
@@ -222,38 +219,28 @@ spring.servlet.multipart.max-request-size=10MB
 ### Installation & Local Execution
 
 1. **Clone the repository:**
-```bash
-git clone https://github.com/Anasfdch5/iso-progress-tracker.git
-cd iso-progress-tracker
-
-```
-
+   ```bash
+   git clone https://github.com/Anasfdch5/iso-progress-tracker.git
+   cd iso-progress-tracker
+   ```
 
 2. **Build and package the application:**
-```bash
-mvn clean install
-
-```
-
+   ```bash
+   mvn clean install
+   ```
 
 3. **Launch the Spring Boot server:**
-```bash
-mvn spring-boot:run
-
-```
-
+   ```bash
+   mvn spring-boot:run
+   ```
 
 4. **Access the application:**
-* **Web Portal:** Open your browser and navigate to `http://localhost:8080/login`
-* **Initial Admin Credentials:** Configured via `DataInitializer.java`
-* **Embedded H2 Web Console:** `http://localhost:8080/h2-console`
-* **JDBC URL:** `jdbc:h2:file:./data/isotrackerdb;AUTO_SERVER=TRUE`
-* **User Name:** `sa`
-* **Password:** *(leave empty)*
-
-
-
-
+   * **Web Portal:** Open your browser and navigate to `http://localhost:8080/login`
+   * **Initial Admin Credentials:** Configured via `DataInitializer.java`
+   * **Embedded H2 Web Console:** `http://localhost:8080/h2-console`
+     * **JDBC URL:** `jdbc:h2:file:./data/isotrackerdb;AUTO_SERVER=TRUE`
+     * **User Name:** `sa`
+     * **Password:** *(leave empty)*
 
 ---
 
@@ -275,12 +262,6 @@ This project is licensed under the **GNU General Public License v3.0** — see t
 ## 👤 Author
 
 * **Anas Fdaouch** — Software Engineering Student at École Nationale des Sciences Appliquées d'Agadir (ENSA-A)
-* **Email:** — anasfdaouch5@gmail.com
-* **GitHub:** [github.com/Anasfdch5](https://github.com/Anasfdch5)
-* **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.linkedin.com/in/anas-fdaouch/)
-
-
-
-```
-
-```
+  * **Email:** [anasfdaouch5@gmail.com](mailto:anasfdaouch5@gmail.com)
+  * **GitHub:** [github.com/Anasfdch5](https://github.com/Anasfdch5)
+  * **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.linkedin.com/in/anas-fdaouch/)
