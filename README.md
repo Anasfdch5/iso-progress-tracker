@@ -17,7 +17,7 @@ Engineered using the **2TUP (Two Tracks Unified Process)** methodology with a 3-
 
 ## 📖 Project Overview
 
-Continuous audit readiness is critical for modern organizations, yet compliance management often suffers from fragmented spreadsheets, scattered email threads, and untracked file attachments. 
+Continuous audit readiness is critical for modern organizations, yet compliance management often suffers from fragmented spreadsheets, scattered email threads, and untracked file attachments.
 
 **ISO Progress Tracker** addresses these operational risks by providing a unified, secure workspace that centralizes process ownership, corrective action tracking, and audit artifact verification. Developed for **Certifia**, the platform streamlines audit preparation, automates metric computation, and guarantees end-to-end accountability across organizational departments.
 
@@ -25,21 +25,21 @@ Continuous audit readiness is critical for modern organizations, yet compliance 
 
 ## 🌟 Key Functional Modules
 
-* **Normative Process Portfolio:** Complete lifecycle management (CRUD) for ISO 9001 and ISO 27001 processes[cite: 1, 2]. Features multi-criteria keyword search, standard-specific filtering, and dynamic multi-column sorting (by Name, Responsible Pilot, Target Date, and Progress).
-* **Corrective Action Plans (CAPA):** Contextual mitigation tracking linked directly to parent processes with cascading integrity[cite: 1, 2]. Tracks operational deadlines and strict execution statuses (`EN COURS`, `TERMINÉ`).
-* **Centralized Audit Evidence Vault:** Secure document repository managing file uploads, duplicate title prevention, metadata indexing (file size, MIME type, upload timestamp), and direct byte-stream downloading[cite: 1, 2].
-* **In-Memory Analytics Dashboard (`/stats`):** Real-time executive metrics computed via the **Java Streams API**, including overall compliance percentages, pilot workload rankings, standard distributions, and process health indicators without heavy SQL aggregate overhead[cite: 1, 2].
-* **Role-Based Access Control (RBAC):** Tiered operational permissions (`ROLE_ADMIN` vs. `ROLE_USER`) secured with **Spring Security 6**, BCrypt password hashing, and active CSRF mitigation[cite: 1, 2].
+* **Normative Process Portfolio:** Complete lifecycle management (CRUD) for ISO 9001 and ISO 27001 processes. Features multi-criteria keyword search, standard-specific filtering, and dynamic multi-column sorting (by Name, Responsible Pilot, Target Date, and Progress).
+* **Corrective Action Plans (CAPA):** Contextual mitigation tracking linked directly to parent processes with cascading integrity. Tracks operational deadlines and strict execution statuses (`EN COURS`, `TERMINÉ`).
+* **Centralized Audit Evidence Vault:** Secure document repository managing file uploads, duplicate title prevention, metadata indexing (file size, MIME type, upload timestamp), and direct byte-stream downloading.
+* **In-Memory Analytics Dashboard (`/stats`):** Real-time executive metrics computed via the **Java Streams API**, including overall compliance percentages, pilot workload rankings, standard distributions, and process health indicators without heavy SQL aggregate overhead.
+* **Role-Based Access Control (RBAC):** Tiered operational permissions (`ROLE_ADMIN` vs. `ROLE_USER`) secured with **Spring Security 6**, BCrypt password hashing, and active CSRF mitigation.
 * **Security Interceptors & Workflow Governance:** 
   * Custom `ForcePasswordChangeInterceptor` blocking platform access until temporary or reset credentials are changed via `force-change-password.html`.
-  * Self-registration gate holding unapproved accounts in a pending state (`approved = false`) until validated by an administrator[cite: 1, 2].
-  * User management portal for administrators to review accounts, process password recovery tickets, and edit permissions[cite: 1, 2].
+  * Self-registration gate holding unapproved accounts in a pending state (`approved = false`) until validated by an administrator.
+  * User management portal for administrators to review accounts, process password recovery tickets, and edit permissions.
 
 ---
 
 ## 🏛️ System Architecture
 
-The application adopts an enterprise 3-tier monolithic architecture ensuring strict separation of presentation, security, business computation, and data persistence[cite: 1, 2]:
+The application adopts an enterprise 3-tier monolithic architecture ensuring strict separation of presentation, security, business computation, and data persistence:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
