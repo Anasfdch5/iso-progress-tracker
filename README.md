@@ -278,7 +278,4 @@ This project is licensed under the **GNU General Public License v3.0** — see t
 * **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.google.com/search?q=https://www.linkedin.com/in/anas-fdaouch)
 
 
-
-```
-
 ```
