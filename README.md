@@ -88,6 +88,7 @@ The application adopts an enterprise 3-tier monolithic architecture ensuring str
 │  - Embedded H2 Database (Persistent File Mode + AUTO_SERVER=TRUE)      │
 │  - File System Evidence Vault (uploads/iso_docs/)                      │
 └────────────────────────────────────────────────────────────────────────┘
+
 ```
 
 ---
@@ -267,15 +268,19 @@ mvn spring-boot:run
 
 ## 📄 License
 
-This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](https://www.google.com/search?q=LICENSE) file for complete terms and copyleft permissions.
+This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](https://github.com/Anasfdch5/iso-progress-tracker/blob/main/LICENSE) file for complete terms and copyleft permissions.
 
 ---
 
 ## 👤 Author
 
 * **Anas Fdaouch** — Software Engineering Student at École Nationale des Sciences Appliquées d'Agadir (ENSA-A)
+* **Email:** anasfdaouch5@gmail.com
 * **GitHub:** [github.com/Anasfdch5](https://github.com/Anasfdch5)
-* **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.google.com/search?q=https://www.linkedin.com/in/anas-fdaouch)
+* **LinkedIn:** [linkedin.com/in/anas-fdaouch](https://www.linkedin.com/in/anas-fdaouch/)
 
+
+
+```
 
 ```
