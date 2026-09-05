@@ -33,3 +33,18 @@ Engineered using the **2TUP (Two Tracks Unified Process)** methodology with a 3-
 ├── Security & Interceptor Layer: Spring Security 6, ForcePasswordChangeInterceptor
 ├── Business & Analytics Layer: Spring MVC Services, Java Streams API
 └── Persistence & Storage Layer: Spring Data JPA, Hibernate ORM, Embedded H2 (Persistent File Mode)
+🛠️ Technology StackLayer / ConcernTechnologyVersionRationaleRuntimeJava SE (JDK)17 LTSModern enterprise LTS baseline with Records and Streams API.FrameworkSpring Boot3.2.5Auto-configuration, IoC container, and embedded Tomcat 10.SecuritySpring Security6.2.4Route protection, BCrypt cryptography, and custom interceptors.ORM / Data AccessSpring Data JPA / Hibernate6.4.4Declarative repositories and relational mapping.DatabaseH2 Database Engine2.2.224Zero-dependency persistent file-mode storage with AUTO_SERVER=TRUE.Template EngineThymeleaf3.1.2Natural server-side HTML rendering integrated with Spring Security tags.Frontend UIBootstrap5.3Responsive grid layout and accessible UI components.Build AutomationApache Maven3.8+Standard dependency resolution and application packaging.📂 Project StructurePlaintextcom.iso_progress_tracker/
+├── config/             # SecurityFilterChain, WebMvcConfig, ForcePasswordChangeInterceptor, DataInitializer
+├── controllers/        # Spring MVC Controllers (Process, Action, Document, Stats, Admin, Auth, Profile)
+├── dto/                # Data Transfer Objects (PasswordChangeForm)
+├── entities/           # JPA Entities (Process, Action, Document, User, Role)
+├── repositories/       # Spring Data JPA Repositories
+├── services/           # Business Logic, File Management, and Streams Analytics
+└── resources/
+    ├── templates/      # Thymeleaf UI Templates (processes/, admin, security, auth)
+    └── application.properties
+🚀 Getting StartedPrerequisitesJDK 17 (or higher LTS version)Apache Maven 3.8+Installation & RunClone the repository:Bashgit clone [https://github.com/Anasfdch5/iso-progress-tracker.git](https://github.com/Anasfdch5/iso-progress-tracker.git)
+cd iso-progress-tracker
+Compile and build:Bashmvn clean install
+Launch the application:Bashmvn spring-boot:run
+Access points:Web Application: http://localhost:8080/loginH2 Database Console: http://localhost:8080/h2-consoleJDBC URL: jdbc:h2:file:./data/isotrackerdb;AUTO_SERVER=TRUEUsername: saPassword: (blank)👤 AuthorAnas Fdaouch — Software Engineering Student at ENSA Agadir
