@@ -1,5 +1,5 @@
 # 🛡️ ISO Progress Tracker
-
+[![Build Status](https://github.com/Anasfdch5/iso-progress-tracker/actions/workflows/maven-build.yml/badge.svg)](https://github.com/Anasfdch5/iso-progress-tracker/actions)
 [![Java](https://img.shields.io/badge/Java-17_LTS-ED8B00?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.5-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Security](https://img.shields.io/badge/Spring_Security-6.2.4-6DB33F?logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
